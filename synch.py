@@ -70,7 +70,7 @@ while True:
             bb = random.randint(0,255)
             rgb = [rr,gg,bb]
             #to be sure to be near to near from hour color
-            if (rr < rh - 30) and (rr < rh + 30) and (gg < gh - 30) and (gg > gh + 30) and (bb < bh - 30) and (bb > bh + 30):
+            if ((rr < (rh - 30)) or (rr > (rh + 30))) and ((gg < (gh - 30)) or (gg > (gh + 30))) and ((bb < (bh - 30)) or (bb > (bh + 30))):
                 ok = True
 
     r=[]
