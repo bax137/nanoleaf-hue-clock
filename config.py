@@ -31,14 +31,13 @@ gh = 100
 bh = 0
 
 #range for random color
-d = 50
+d = 25
 
-#delays
-#transition time for background
-tBg = 30 # = 1.5s ?      
+#transition time for hours
+tHours = 20
 
-#transition time for minutes blinking
-tMinutes = 20  # = 1s ?
+#duration for minute blinking in seconds
+blinkDuration = 2
 
 #duration for 1 step in seconds
-step_duration = 2
+step_duration = 0.1
