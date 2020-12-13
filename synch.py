@@ -40,7 +40,7 @@ payload="{\"write\" : {\"command\" : \"display\", \"animType\" : \"extControl\",
 headers = {
   'Content-Type': 'text/plain'
 }
-response = requests.request("PUT", url, headers=headers, data=payload)
+response = requests.request("WRITE", url, headers=headers, data=payload)
 
 
 url = "http://"+hue_ip+"/api/"+hue_auth_token+"/lights/"+str(hue_light_id)
