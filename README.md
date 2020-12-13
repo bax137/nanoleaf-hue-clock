@@ -8,4 +8,4 @@ The hour is shown with a static color, each panel represents an hour (1 to 12). 
 
 2- Configure the config.py file
 
-3- launch the script
+3- launch the synch.py script
