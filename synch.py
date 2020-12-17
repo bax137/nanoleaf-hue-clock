@@ -19,8 +19,8 @@ hue_light_id = config.hue_light_id
 
 d = config.d
 tHours = config.tHours
-blinkDuration = config.blinkDuration
-tMinutes = round(blinkDuration * 10 / 2)
+blink_duration = config.blink_duration
+tMinutes = round(blink_duration * 10 / 2)
 step_duration = config.step_duration
 
 r2 = config.r2
@@ -72,7 +72,7 @@ while True:
         rgb = converter.get_rgb_from_xy_and_brightness(x,y,bri)
     else:
         #if the light is off we get a random color
-        tBg = blinkDuration * 100 - 50
+        tBg = blink_duration * 100 - 50
         ok = False
         if step == 0:
             while ok == False:
@@ -140,7 +140,7 @@ while True:
                 rMESSAGE.append((0).to_bytes(1, byteorder='big'))
                 rMESSAGE.append(tMinutes.to_bytes(2, byteorder='big'))
                 nbPanels += 1
-            elif step == round(blinkDuration / step_duration / 2):
+            elif step == round(blink_duration / step_duration / 2):
                 rMESSAGE.append(panels[j].to_bytes(2, byteorder='big'))
                 rMESSAGE.append(r2.to_bytes(1, byteorder='big'))
                 rMESSAGE.append(g2.to_bytes(1, byteorder='big'))
@@ -176,7 +176,7 @@ while True:
         previousRgb[1] = rgb[1]
         previousRgb[2] = rgb[2]
                 
-    if step == round(blinkDuration / step_duration):
+    if step == round(blink_duration / step_duration):
         step = -1
 
     step += 1
@@ -188,5 +188,5 @@ while True:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(MESSAGE, (nanoleaf_ip, nanoleaf_udp_port))
 
-    #wait before next stepÒ
+    #wait before next step
     time.sleep(step_duration)

@@ -37,7 +37,7 @@ d = 25
 tHours = 20
 
 #duration for minute blinking in seconds
-blinkDuration = 2
+blink_duration = 2
 
 #duration for 1 step in seconds
 step_duration = 0.1
