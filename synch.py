@@ -54,30 +54,35 @@ previousRgb = [-1,-1,-1]
 
 while True:
     #get the state of hue light
-    response = requests.request("GET", url, headers=headers, data=payload)
-    
-    light = json.loads(response.text)
-    on = light["state"]["on"]
-    bri = light["state"]["bri"]
-    x = light["state"]["xy"][0]
-    y = light["state"]["xy"][1]
-    ct = light["state"]["ct"]
-    tBg = ct - 20
+    try:
+        response = requests.request("GET", url, headers=headers, data=payload)
+        
+        light = json.loads(response.text)
+        on = light["state"]["on"]
+        bri = light["state"]["bri"]
+        x = light["state"]["xy"][0]
+        y = light["state"]["xy"][1]
+        ct = light["state"]["ct"]
+        tBg = ct - 20
+    except:
+        on = False
 
     if on == True:
         #if the light is on we get its color
         rgb = converter.get_rgb_from_xy_and_brightness(x,y,bri)
     else:
         #if the light is off we get a random color
+        tBg = blinkDuration * 100 - 50
         ok = False
-        while ok == False:
-            rr = random.randint(0,255)
-            gg = random.randint(0,255)
-            bb = random.randint(0,255)
-            rgb = [rr,gg,bb]
-            #to be sure to be near to near from hour color
-            if ((rr < (rh - 30)) or (rr > (rh + 30))) and ((gg < (gh - 30)) or (gg > (gh + 30))) and ((bb < (bh - 30)) or (bb > (bh + 30))):
-                ok = True
+        if step == 0:
+            while ok == False:
+                rr = random.randint(0,255)
+                gg = random.randint(0,255)
+                bb = random.randint(0,255)
+                rgb = [rr,gg,bb]
+                #to be sure to be near to near from hour color
+                if ((rr < (rh - 30)) or (rr > (rh + 30))) and ((gg < (gh - 30)) or (gg > (gh + 30))) and ((bb < (bh - 30)) or (bb > (bh + 30))):
+                    ok = True
 
     r=[]
     g=[]
@@ -126,6 +131,7 @@ while True:
     for j in range(12):
         if j == int(((minute) / 60) * 12):
             #panel for minutes
+            prevMinutesPanel = j
             if step == 0:
                 rMESSAGE.append(panels[j].to_bytes(2, byteorder='big'))
                 rMESSAGE.append(r1.to_bytes(1, byteorder='big'))
@@ -142,9 +148,6 @@ while True:
                 rMESSAGE.append((0).to_bytes(1, byteorder='big'))
                 rMESSAGE.append(tMinutes.to_bytes(2, byteorder='big'))
                 nbPanels += 1
-            elif step == round(blinkDuration / step_duration):
-                prevMinutesPanel = j
-                step = -1
         #panel for hours
         elif (j == (hour - 1) or j == (hour - 13)) or (j == 11 and hour == 0):
             rMESSAGE.append(panels[j].to_bytes(2, byteorder='big'))
@@ -155,7 +158,7 @@ while True:
             rMESSAGE.append(tHours.to_bytes(2, byteorder='big'))
             nbPanels += 1
         #other panel
-        elif (rgb[0] != previousRgb[0]) or (rgb[1] != previousRgb[1]) or (rgb[2] != previousRgb[2]):
+        elif (rgb[0] != previousRgb[0]) or (rgb[1] != previousRgb[1]) or (rgb[2] != previousRgb[2]) or (j == prevMinutesPanel):
                 t = tBg
                 if j == prevMinutesPanel:
                     t = 10
@@ -172,6 +175,10 @@ while True:
         previousRgb[0] = rgb[0]
         previousRgb[1] = rgb[1]
         previousRgb[2] = rgb[2]
+                
+    if step == round(blinkDuration / step_duration):
+        step = -1
+
     step += 1
     #first bytes = number of panels
     rMESSAGE[0]=(nbPanels).to_bytes(2, byteorder='big')
