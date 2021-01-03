@@ -1,5 +1,5 @@
 from rgbxy import ColorHelper,GamutA
-from signal import *
+from signal import signal,SIGABRT, SIGINT, SIGTERM
 import config
 import requests
 import json
