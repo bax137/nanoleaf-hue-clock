@@ -18,6 +18,7 @@ def clean(*args):
     }
 
     response = requests.request("PUT", url, headers=headers, data=payload)
+    print(response)
     os._exit(0)
 
 for sig in (SIGABRT, SIGINT, SIGTERM):
