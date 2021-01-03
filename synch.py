@@ -1,4 +1,5 @@
 from rgbxy import ColorHelper,GamutA
+from signal import *
 import config
 import requests
 import json
@@ -6,6 +7,21 @@ import socket
 import datetime
 import time
 import random
+import os
+
+def clean(*args):
+    url = "http://192.168.1.119:16021/api/v1/WhKqKUyUscTD3ZslDpONvBrDMlQCX8tJ/state"
+
+    payload="{\n  \"on\": {\n    \"value\": false\n  }\n}"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request("PUT", url, headers=headers, data=payload)
+    os._exit(0)
+
+for sig in (SIGABRT, SIGINT, SIGTERM):
+    signal(sig, clean)
 
 nanoleaf_ip = config.nanoleaf_ip
 nanoleaf_udp_port = config.nanoleaf_udp_port
