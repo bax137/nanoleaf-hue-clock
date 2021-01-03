@@ -66,6 +66,7 @@ payload={}
 headers = {}
 step = 0
 prevMinutesPanel = -1
+first = True
 
 previousRgb = [-1,-1,-1]
 
@@ -73,14 +74,17 @@ while True:
     #get the state of hue light
     try:
         response = requests.request("GET", url, headers=headers, data=payload)
-        
         light = json.loads(response.text)
         on = light["state"]["on"]
         bri = light["state"]["bri"]
         x = light["state"]["xy"][0]
         y = light["state"]["xy"][1]
         ct = light["state"]["ct"]
-        tBg = ct - 20
+        if (first == True):
+            tBg = 10
+            first = False
+        else:
+            tBg = ct - 20
     except:
         on = False
 
@@ -89,7 +93,12 @@ while True:
         rgb = converter.get_rgb_from_xy_and_brightness(x,y,bri)
     else:
         #if the light is off we get a random color
-        tBg = blink_duration * 100 - 50
+        if (first == True):
+            tBg = 10
+            first = False
+        else:
+            tBg = blink_duration * 100 - 50
+
         ok = False
         if step == 0:
             while ok == False:
